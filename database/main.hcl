@@ -1,6 +1,5 @@
 // Create a postgres database and populate it with data.
 // Connect to the database with another container.
-
 resource "network" "main" {
   subnet = "10.0.10.0/24"
 }
@@ -35,7 +34,6 @@ resource "container" "postgres" {
 
     exec {
       script = <<-EOF
-        #!/bin/bash
         pg_isready -h localhost -p 5432 -U postgres
       EOF
     }
@@ -43,15 +41,22 @@ resource "container" "postgres" {
 }
 
 resource "exec" "psql" {
-  target = resource.container.postgres
+  image {
+    name = "postgres:16.0"
+  }
+
+  network {
+    id = resource.network.main.id
+  }
 
   environment = {
-    POSTGRES_PASSWORD = "example"
-    POSTGRES_USER = "example"
-    POSTGRES_DB = "example"
+    PGHOST = resource.container.postgres.container_name
+    PGPASSWORD = "example"
+    PGUSER = "example"
+    PGDATABASE = "example"
   }
 
   script = <<-EOF
-  psql -h localhost -U example -d example -c "SELECT * FROM example;"
+  psql -c "SELECT * FROM example;"
   EOF
 }
