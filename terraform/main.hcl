@@ -1,0 +1,1 @@
+// use terraform to provision a container and then use the output in another one
