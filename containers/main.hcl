@@ -3,7 +3,8 @@ resource "network" "main" {
   subnet = "10.0.10.0/24"
 }
 
-// frontend
+// A "Fake Service" container that poses as a frontend application.
+// The frontend application will call the currency and payments microservices.
 resource "container" "frontend" {
   image {
     name = "ghcr.io/nicholasjackson/fake-service:v0.26.0"
@@ -19,17 +20,20 @@ resource "container" "frontend" {
     NAME = "frontend"
     MESSAGE = "Hello from frontend"
     LISTEN_ADDR = "0.0.0.0:80"
-    UPSTREAM_URIS = "http://${resource.container.backend_1.container_name},http://${resource.container.backend_2.container_name}"
+    UPSTREAM_URIS = "http://${resource.container.currency.container_name}?currency=USD,http://${resource.container.payments.container_name}?user=johndoe"
   }
 
+  // Expose the http port to the host.
+  // We will be able to visit the UI on http://localhost/ui.
   port {
     local = 80
     host = 80
   }
 }
 
-// backend 1
-resource "container" "backend_1" {
+// A "Fake Service" container that poses as a currency microservice.
+// The currency microservice will call the database.
+resource "container" "currency" {
   image {
     name = "ghcr.io/nicholasjackson/fake-service:v0.26.0"
   }
@@ -41,15 +45,16 @@ resource "container" "backend_1" {
 
   // Configure fake-service with the environment variables.
   environment = {
-    NAME = "backend_1"
-    MESSAGE = "Hello from backend_1"
+    NAME = "currency"
+    MESSAGE = "Hello from currency"
     LISTEN_ADDR = "0.0.0.0:80"
     UPSTREAM_URIS = "http://${resource.container.database.container_name}:5432"
   }
 }
 
-// backend 2
-resource "container" "backend_2" {
+// A "Fake Service" container that poses as a payments microservice.
+// The payments microservice will call the database.
+resource "container" "payments" {
   image {
     name = "ghcr.io/nicholasjackson/fake-service:v0.26.0"
   }
@@ -61,14 +66,14 @@ resource "container" "backend_2" {
 
   // Configure fake-service with the environment variables.
   environment = {
-    NAME = "backend_2"
-    MESSAGE = "Hello from backend_2"
+    NAME = "payments"
+    MESSAGE = "Hello from payments"
     LISTEN_ADDR = "0.0.0.0:80"
     UPSTREAM_URIS = "http://${resource.container.database.container_name}:5432"
   }
 }
 
-// database
+// A "Fake Service" container that poses as a postgres database.
 resource "container" "database" {
   image {
     name = "ghcr.io/nicholasjackson/fake-service:v0.26.0"

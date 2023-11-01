@@ -14,7 +14,7 @@ resource "container" "nginx" {
     id = resource.network.main.id
   }
 
-  // Export the http port so we can connect to it from the host.
+  // Expose the http port so we can connect to it from the host.
   port {
     local = 80
     host = 80

@@ -28,7 +28,7 @@ resource "container" "postgres" {
     POSTGRES_DB = "postgres"
   }
 
-  // Export the postgres port so we can connect to it from the host.
+  // Expose the postgres port so we can connect to it from the host.
   port {
     local = 5432
     host = 5432
