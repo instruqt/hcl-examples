@@ -42,7 +42,8 @@ jumppad up database
 
 ## Work in progress
 
-The following examples are still being worked on, or work has not yet started.
+> [!WARNING]
+> The following examples are still being worked on, or work has not yet started.
 
 ### Certificates
 
