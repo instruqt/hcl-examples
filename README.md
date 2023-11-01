@@ -31,6 +31,7 @@ Use Terraform to provision a container and then use the Terraform output to conf
 
 ## Database
 Create a postgres database and populate it with data.
+Then query that data using a remote exec.
 
 ## HTTP
 Make an HTTP request and use the response to configure a container.
