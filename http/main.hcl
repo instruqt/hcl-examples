@@ -1,7 +1,36 @@
-// Make an HTTP request and use the response to configure a container.
+// Create a network to connect the resources to. 
+resource "network" "main" {
+  subnet = "100.0.10.0/24"
+}
+
+resource "container" "httpbin" {
+  image {
+    name = "kong/httpbin:0.1.0"
+  }
+
+  network {
+    id = resource.network.main.id
+  }
+
+  port {
+    local = 80
+    host = 80
+  }
+
+  health_check {
+    timeout = "30s"
+
+    http {
+      address = "http://localhost/get"
+      success_codes = [200]
+    }
+  }
+}
+
 resource "http" "get" {
   method = "GET"
-  url = "https://httpbin.org/get"
+
+  url = "http://${resource.container.httpbin.container_name}/get"
 
   headers = {
     Accept = "application/json"
@@ -10,7 +39,8 @@ resource "http" "get" {
 
 resource "http" "post" {
   method = "POST"
-  url = "https://httpbin.org/post"
+
+  url = "http://${resource.container.httpbin.container_name}/post"
 
   payload = jsonencode({
     foo = "bar"
@@ -21,12 +51,10 @@ resource "http" "post" {
   }
 }
 
-local "get" {
-  body = jsondecode(resource.http.get.body)
-  status = resource.http.get.status
+output "get_body" {
+  value = resource.http.get.status == 200 ? resource.http.get.body : "error"
 }
 
-local "post" {
-  body = jsondecode(resource.http.post.body)
-  status = resource.http.post.status
+output "post_body" {
+  value = resource.http.post.status == 200 ? resource.http.post.body : "error"
 }

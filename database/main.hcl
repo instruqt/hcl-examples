@@ -1,6 +1,6 @@
 // Create a network to connect the resources to. 
 resource "network" "main" {
-  subnet = "10.0.10.0/24"
+  subnet = "100.0.10.0/24"
 }
 
 // Copy the init sql files from our local folder to a temporary data directory 

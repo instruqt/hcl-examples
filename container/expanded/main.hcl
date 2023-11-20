@@ -1,6 +1,6 @@
 // Create a network to connect the resources to.
 resource "network" "main" {
-  subnet = "10.0.10.0/24"
+  subnet = "100.0.10.0/24"
 }
 
 // Create an ubuntu container.

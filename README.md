@@ -2,6 +2,15 @@
 
 This repository contains example code that shows you how to do common things in sandbox environments using Jumppad.
 
+### Certificates
+
+Generate a CA and leaf certificate and use them in a webserver to server traffic over https.
+
+```shell
+jumppad up certificates
+curl --cacert ~/.jumppad/data/certs/root.cert https://webserver.container.jumppad.dev
+```
+
 ## Container
 
 The container folder contains multiple examples that use containers.
@@ -44,10 +53,6 @@ jumppad up database
 
 > [!WARNING]
 > The following examples are still being worked on, or work has not yet started.
-
-### Certificates
-
-Generate a CA and leaf cert that are then used in a webserver.
 
 ### Kubernetes
 
