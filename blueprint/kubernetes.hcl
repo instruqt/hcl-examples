@@ -24,6 +24,8 @@ resource "helm" "vault" {
 }
 
 resource "ingress" "vault_http" {
+  depends_on = ["resource.helm.vault"]
+
   port = 8200
 
   target {
