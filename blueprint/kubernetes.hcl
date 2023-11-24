@@ -2,6 +2,18 @@ resource "k8s_cluster" "k8s" {
   network {
     id = resource.network.main.id
   }
+
+  copy_image {
+  name = "hashicorp/vault-k8s:0.14.1"
+  }
+
+  copy_image {
+    name = "hashicorp/vault:1.9.0"
+  }
+
+  copy_image {
+    name = "hashicorp/vault-csi-provider:0.3.0"
+  }
 }
 
 resource "helm" "vault" {
