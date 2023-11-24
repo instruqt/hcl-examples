@@ -3,7 +3,8 @@ resource "container" "k9s" {
     name = "derailed/k9s"
   }
 
-  command = ["k9s", "--readonly"]
+  entrypoint = ["/usr/bin/tail"]
+  command = ["-f", "/dev/null"]
 
   volume {
     source = resource.k8s_cluster.k8s.kubeconfig
