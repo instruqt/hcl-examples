@@ -4,55 +4,130 @@ resource "k8s_cluster" "k8s" {
   }
 
   copy_image {
-  name = "hashicorp/vault-k8s:0.14.1"
+    name = "grafana/grafana:10.3.1"
+  }
+  
+  copy_image {
+    name = "rancher/local-path-provisioner:v0.0.24"
   }
 
   copy_image {
-    name = "hashicorp/vault:1.9.0"
+    name = "rancher/mirrored-coredns-coredns:1.10.1"
   }
 
   copy_image {
-    name = "hashicorp/vault-csi-provider:0.3.0"
+    name = "rancher/mirrored-library-busybox:1.34.1"
+  }
+
+  copy_image {
+    name = "rancher/mirrored-metrics-server:v0.6.3"
+  }
+
+  copy_image {
+    name = "rancher/mirrored-pause:3.6"
+  }
+
+  copy_image {
+    name = "ghcr.io/jumppad-labs/connector:v0.2.1"
+  }
+
+  copy_image {
+    name = "quay.io/prometheus-operator/prometheus-config-reloader:v0.71.2"
+  }
+
+  copy_image {
+    name = "quay.io/prometheus/alertmanager:v0.26.0"
+  }
+
+  copy_image {
+    name = "quay.io/prometheus/node-exporter:v1.7.0"
+  }
+
+  copy_image {
+    name = "quay.io/prometheus/prometheus:v2.49.1"
+  }
+
+  copy_image {
+    name = "quay.io/prometheus/pushgateway:v1.7.0"
   }
 }
 
-resource "helm" "vault" {
+resource "helm" "prometheus" {
   cluster = resource.k8s_cluster.k8s
 
   repository {
-    name = "hashicorp"
-    url  = "https://helm.releases.hashicorp.com"
+    name = "prometheus-community"
+    url  = "https://prometheus-community.github.io/helm-charts"
   }
 
-  chart   = "hashicorp/vault"
-  version = "v0.18.0"
+  chart   = "prometheus-community/prometheus"
+  version = "25.11.0"
 
-  values = "files/vault-values.yaml"
+  values = "files/prometheus-values.yaml"
 
   health_check {
     timeout = "240s"
-    pods    = ["app.kubernetes.io/name=vault"]
+    pods    = ["app.kubernetes.io/name=prometheus"]
   }
 }
 
-resource "ingress" "vault_http" {
-  depends_on = ["resource.helm.vault"]
+resource "helm" "grafana" {
+  cluster = resource.k8s_cluster.k8s
 
-  port = 8200
+  repository {
+    name = "grafana"
+    url  = "https://grafana.github.io/helm-charts"
+  }
+
+  chart   = "grafana/grafana"
+  version = "7.3.0"
+
+  values = "files/grafana-values.yaml"
+
+  health_check {
+    timeout = "240s"
+    pods    = ["app.kubernetes.io/name=grafana"]
+  }
+}
+
+resource "ingress" "prometheus_http" {
+  depends_on = ["resource.helm.prometheus"]
+
+  port = 9090
 
   target {
     resource = resource.k8s_cluster.k8s
-    port = 8200
+    port = 80
 
     config = {
-      service   = "vault"
+      service   = "prometheus-server"
       namespace = "default"
     }
   }
 }
 
-output "VAULT_ADDR" {
-  value = resource.ingress.vault_http.local_address
+resource "ingress" "grafana_http" {
+  depends_on = ["resource.helm.grafana"]
+
+  port = 3000
+
+  target {
+    resource = resource.k8s_cluster.k8s
+    port = 80
+
+    config = {
+      service   = "grafana"
+      namespace = "default"
+    }
+  }
+}
+
+output "PROMETHEUS_ADDR" {
+  value = resource.ingress.prometheus_http.local_address
+}
+
+output "GRAFANA_ADDR" {
+  value = resource.ingress.grafana_http.local_address
 }
 
 output "KUBECONFIG" {

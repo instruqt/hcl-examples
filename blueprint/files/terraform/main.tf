@@ -1,10 +1,10 @@
 terraform {
   required_providers {
-    vault = {
-      source = "hashicorp/vault"
-      version = "3.19.0"
+    grafana = {
+      source = "grafana/grafana"
+      version = "2.10.0"
     }
   }
 }
 
-provider "vault" {}
+provider "grafana" {}

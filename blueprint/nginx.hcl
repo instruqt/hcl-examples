@@ -5,8 +5,8 @@ resource "template" "index" {
   destination = "${data("nginx")}/index.html"
   variables = {
     name = variable.name
-    vault_address = resource.ingress.vault_http.local_address
-    token = resource.terraform.configure_vault.output.vault_token
+    username = resource.terraform.configure_grafana.output.grafana_username
+    password = resource.terraform.configure_grafana.output.grafana_password
   }
 }
 

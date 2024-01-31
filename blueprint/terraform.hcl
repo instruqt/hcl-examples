@@ -1,4 +1,4 @@
-resource "terraform" "configure_vault" {
+resource "terraform" "configure_grafana" {
   network {
     id = resource.network.main.id
   }
@@ -7,11 +7,11 @@ resource "terraform" "configure_vault" {
 
   source = "files/terraform"
   environment = {
-    VAULT_TOKEN = "root"
-    VAULT_ADDR  = "http://${resource.ingress.vault_http.local_address}"
+    GRAFANA_AUTH = "admin:admin"
+    GRAFANA_URL = "http://${resource.ingress.grafana_http.local_address}"
   }
 
   variables = {
-    secret = "verysecret"
+    prometheus_addr = "http://${resource.ingress.prometheus_http.local_address}"
   }
 }
