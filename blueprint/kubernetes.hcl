@@ -2,54 +2,6 @@ resource "k8s_cluster" "k8s" {
   network {
     id = resource.network.main.id
   }
-
-  copy_image {
-    name = "grafana/grafana:10.3.1"
-  }
-  
-  copy_image {
-    name = "rancher/local-path-provisioner:v0.0.24"
-  }
-
-  copy_image {
-    name = "rancher/mirrored-coredns-coredns:1.10.1"
-  }
-
-  copy_image {
-    name = "rancher/mirrored-library-busybox:1.34.1"
-  }
-
-  copy_image {
-    name = "rancher/mirrored-metrics-server:v0.6.3"
-  }
-
-  copy_image {
-    name = "rancher/mirrored-pause:3.6"
-  }
-
-  copy_image {
-    name = "ghcr.io/jumppad-labs/connector:v0.2.1"
-  }
-
-  copy_image {
-    name = "quay.io/prometheus-operator/prometheus-config-reloader:v0.71.2"
-  }
-
-  copy_image {
-    name = "quay.io/prometheus/alertmanager:v0.26.0"
-  }
-
-  copy_image {
-    name = "quay.io/prometheus/node-exporter:v1.7.0"
-  }
-
-  copy_image {
-    name = "quay.io/prometheus/prometheus:v2.49.1"
-  }
-
-  copy_image {
-    name = "quay.io/prometheus/pushgateway:v1.7.0"
-  }
 }
 
 resource "helm" "prometheus" {
