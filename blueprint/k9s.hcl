@@ -1,6 +1,6 @@
 resource "container" "k9s" {
   network {
-    id = resource.network.meta.id
+    id = resource.network.main.meta.id
   }
 
   image {
