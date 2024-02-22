@@ -1,6 +1,6 @@
 resource "terraform" "configure_grafana" {
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 
   version = "1.6.4"

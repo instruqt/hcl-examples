@@ -1,6 +1,6 @@
 resource "k8s_cluster" "k8s" {
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 }
 

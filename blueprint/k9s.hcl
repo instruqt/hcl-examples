@@ -1,4 +1,8 @@
 resource "container" "k9s" {
+  network {
+    id = resource.network.network.meta.id
+  }
+
   image {
     name = "derailed/k9s"
   }
