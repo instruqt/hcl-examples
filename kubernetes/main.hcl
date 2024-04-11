@@ -2,14 +2,14 @@ resource "network" "main" {
   subnet = "100.0.10.0/24"
 }
 
-resource "kubernetes_cluster" "k8s" {
+resource "k8s_cluster" "k8s" {
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 }
 
 resource "helm" "vault" {
-  cluster = resource.kubernetes_cluster.k8s
+  cluster = resource.k8s_cluster.k8s
 
   repository {
     name = "hashicorp"
@@ -27,10 +27,10 @@ resource "helm" "vault" {
   }
 }
 
-resource "kubernetes_config" "app" {
+resource "k8s_config" "app" {
   depends_on = ["resource.helm.vault"]
 
-  cluster = resource.kubernetes_cluster.k8s
+  cluster = resource.k8s_cluster.k8s
 
   paths = ["files/web-service.yaml"]
 
@@ -46,7 +46,7 @@ resource "ingress" "vault_http" {
   port = 8200
 
   target {
-    resource = resource.kubernetes_cluster.k8s
+    resource = resource.k8s_cluster.k8s
     port = 8200
 
     config = {
@@ -60,7 +60,7 @@ resource "ingress" "web_service" {
   port = 9090
 
   target {
-    resource = resource.kubernetes_cluster.k8s
+    resource = resource.k8s_cluster.k8s
     port = 9090
 
     config = {
@@ -79,5 +79,5 @@ output "WEB_ADDR" {
 }
 
 output "KUBECONFIG" {
-  value = resource.kubernetes_cluster.k8s.kubeconfig
+  value = resource.k8s_cluster.k8s.kubeconfig
 }

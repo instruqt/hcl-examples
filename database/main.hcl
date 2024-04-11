@@ -18,7 +18,7 @@ resource "container" "postgres" {
 
   // Attach the container to the network.
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 
   // Pass the postgres environment variables to the container to configure it.
@@ -63,7 +63,7 @@ resource "exec" "psql" {
 
   // Attach the container to the network.
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 
   // Pass the postgres environment variables to psql to configure it.
