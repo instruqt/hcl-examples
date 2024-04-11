@@ -11,7 +11,7 @@ resource "container" "nginx" {
 
   // Attach the container to the network.
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 
   // Expose the http port so we can connect to it from the host.

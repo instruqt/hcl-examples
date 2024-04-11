@@ -12,7 +12,7 @@ resource "container" "frontend" {
 
   // Attach the container to the network.
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 
   // Configure fake-service with the environment variables.
@@ -40,7 +40,7 @@ resource "container" "currency" {
 
   // Attach the container to the network.
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 
   // Configure fake-service with the environment variables.
@@ -61,7 +61,7 @@ resource "container" "payments" {
 
   // Attach the container to the network.
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 
   // Configure fake-service with the environment variables.
@@ -81,7 +81,7 @@ resource "container" "database" {
 
   // Attach the container to the network.
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 
   // Configure fake-service with the environment variables.

@@ -36,7 +36,7 @@ resource "container" "webserver" {
 
   // Attach the container to the network.
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 
   // Specify the amount of memory to allocate to the container.

@@ -14,7 +14,7 @@ resource "container" "ubuntu" {
 
   // Attach the container to the network.
   network {
-    id = resource.network.main.id
+    id = resource.network.main.meta.id
   }
 
   // Mount the `files/motd` file into the container at `/etc/motd`.
