@@ -36,5 +36,5 @@ resource "instruqt_terminal" "nginx" {
 
 resource "instruqt_service" "nginx" {
   target = resource.container.nginx
-  port   = 15779
+  port   = 80
 }
