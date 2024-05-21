@@ -2,7 +2,7 @@ resource "network" "main" {
   subnet = "100.0.5.0/24"
 }
 
-resource "instruqt_lab" "one" {  
+resource "lab" "one" {  
   title = "Demo"
   description = <<-EOF
   Demo description 
@@ -30,11 +30,11 @@ resource "container" "nginx" {
   }
 }
 
-resource "instruqt_terminal" "nginx" {
+resource "terminal" "nginx" {
   target  = resource.container.nginx
 }
 
-resource "instruqt_service" "nginx" {
+resource "service" "nginx" {
   target = resource.container.nginx
   port   = 80
 }
