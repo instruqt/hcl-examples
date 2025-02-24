@@ -36,7 +36,7 @@ resource "container" "postgres" {
 
   // Mount the init sql files as a volume.
   volume {
-    source = "${data("postgres")}/init"
+    source = resource.copy.postgres_init.destination //"${data("postgres")}/init"
     destination = "/docker-entrypoint-initdb.d/"
   }
 
